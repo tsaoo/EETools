@@ -1,10 +1,11 @@
 # EETools
 Scripts and other stuff that make life less dumb
 
-## AD Scripts
+## CAD Scripts
 
-### MCUFanout.pas
-Automatically fans out MCUs (STM32 only for now) according to external pin-out file.
+### MCUFanout.pas (Altium Designer)
+### MCUFanout.py (KiCad)
+Automatically fans out MCUs according to external pin-out file.
 
 ## Other Tools
 
