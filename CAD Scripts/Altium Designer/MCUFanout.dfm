@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = 'FindSTM32pins'
+  Caption = 'MCUFanout'
   ClientHeight = 360
   ClientWidth = 500
   Color = clBtnFace
