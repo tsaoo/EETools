@@ -50,13 +50,12 @@ procedure FanOutMCUPins;
 var
   CurrentSchDoc: ISch_Document;                   // from which the "Run Script" command is executed
 
-  SchIterator: ISch_Iterator;                     // used to iterate components on CurrentSchDoc
-  Component: ISch_Component;                      // component iterated by SchIterator
+  CompIterator: ISch_Iterator;                     // used to iterate components on CurrentSchDoc
+  Component: ISch_Component;                      // component iterated by CompIterator
   PinIterator: ISch_Iterator;                     // used to iterate pin within Component
   Pin: ISch_Pin;                                  // pin iterated by PinIterator
   PinDesignator: String;                          // designator of Pin
-  PinFullDesignator: String;                      // full designator with part id (i.e. U1A-A4), used to check whether the iterated pin belongs to 
-                                                      // the current part of Component
+  PinFullDesignator: String;                      // full designator with part id (i.e. U1A-A4), used to check whether the iterated pin belongs to the current part of Component
   PinFunction: String;                            // function of Pin, read from PinDictionary
 
   Wire: ISch_Wire;                                // the fanout wire to be created
@@ -83,11 +82,11 @@ begin
     Exit;
   end;
 
-  SchIterator := CurrentSchDoc.SchIterator_Create;
-  SchIterator.AddFilter_ObjectSet(MkSet(eSchComponent));      // let SchIterator read the component objects only
+  CompIterator := CurrentSchDoc.SchIterator_Create;
+  CompIterator.AddFilter_ObjectSet(MkSet(eSchComponent));      // let CompIterator read the component objects only
 
   IsFound := False;
-  Component := SchIterator.FirstSchObject;                    // iterate the components
+  Component := CompIterator.FirstSchObject;                    // iterate the components
   while Component <> nil do
   begin
     if (Component.Comment <> nil) and (Copy(Component.Comment.Text, 1, Length(MCUType)) = MCUType) then
@@ -105,9 +104,9 @@ begin
           ShowMessage('Found pin:' + Pin.Designator + ' part:' + IntToStr(Pin.OwnerSchComponent.GetState_CurrentPartID) + ' ishidden: ' + IntToStr(Pin.IsHidden));
 
         // AD's API SUCKS !!!!
-        // for a multi-part component, every part will be iterated once by SchIterator
+        // for a multi-part component, every part will be iterated once by CompIterator
         // and for every part, EVERY pin of the component will be iterated by PinIterator, no matter the pin belongs to the current part or not.
-        // For those pins not belongs to the current part, its Location will be read as the topleft pin of this part, course it causes overlapping.
+        // For those pins not belonged to the current part, its Location will be read as the topleft pin of this part, which means overlapping.
         // The current solution is to check the full designator of every pin,
         // and see if the part id (e.g. A/B/C...) meets with CurrentPartID of Component.
         
@@ -167,7 +166,7 @@ begin
 
       //break;
     end;
-    Component := SchIterator.NextSchObject;
+    Component := CompIterator.NextSchObject;
   end;
 
   if not IsFound then
